@@ -17,6 +17,6 @@ def output_single_fa(fasta_dict): #split a fastadict into fasta file of single s
     for key in fasta_dict:
         filename = key[1:]+".fa"
         with open(filename, "w+") as outfile:
-            outfile.write(key+"\n"+fasta_dict[key])
+            outfile.write(key+"\n"+fasta_dict[key]+"\n")
             outfile.close()
     return filename
