@@ -20,3 +20,7 @@ def output_single_fa(fasta_dict): #split a fastadict into fasta file of single s
             outfile.write(key+"\n"+fasta_dict[key]+"\n")
             outfile.close()
     return filename
+
+def read_a3m():
+
+    return []
