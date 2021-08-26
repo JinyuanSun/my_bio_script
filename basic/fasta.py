@@ -1,4 +1,5 @@
-#!/usr/bin/env
+#!/usr/bin/env python
+# By Jinyuan Sun
 
 
 def fasta2dic(fastafilename): #read a fasta file into a dict
@@ -24,3 +25,8 @@ def output_single_fa(fasta_dict): #split a fastadict into fasta file of single s
 def read_a3m():
 
     return []
+
+def trim_blast_hits(btb,hitseqs):
+    hitdict = fasta2dic(hitseqs)
+    with open(btb) as blastfile:
+        
