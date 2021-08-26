@@ -29,4 +29,4 @@ def read_a3m():
 def trim_blast_hits(btb,hitseqs):
     hitdict = fasta2dic(hitseqs)
     with open(btb) as blastfile:
-        
+

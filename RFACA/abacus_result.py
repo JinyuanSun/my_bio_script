@@ -2,15 +2,27 @@
 
 # By Jinyuan Sun, 2021
 
-#A   43 VAL->LYS SAI: 0.666 S1: -0.035 S2:  0.000 PACK:   1.180 TOTAL:   1.145
-#A   43 VAL->LEU SAI: 0.666 S1:  0.288 S2:  0.000 PACK:   1.612 TOTAL:   1.900
 
 from mbs.basic import structure
+import pandas as pd
+import argparse
 
-CUTOFF = 3
+parser = argparse.ArgumentParser(description=
+                                 'Process files from previous ABACUS2 singleMutScan')
+parser.add_argument("-ao", '--abacusoutfile', help="Output of ABACUS file")
+parser.add_argument("-c", '--cutoff',help="Cutoff of ABACUS score")
+
+args = parser.parse_args()
+
+abacus_file = args.abacusoutfile
+CUTOFF = int(args.cutoff)
+
 
 def read_abacus_file(abacus_file):
-    abacus_score_dict = {}
+    mutation_list = []
+    position_list = []
+    energy_list = []
+    SD_list = []
     with open(abacus_file) as abacus_file:
         for line in abacus_file:
             lst = line.strip().split()
@@ -19,15 +31,73 @@ def read_abacus_file(abacus_file):
             score = float(lst[-1])
             wild = structure._3_2_1(mutation[0:3])
             mut = structure._3_2_1(mutation[-3:])
-            key = wild + "_" + res_num + "_" + mut
-            abacus_score_dict[key] = score
+            key = wild + res_num + mut
+            mutation_list.append(key)
+            position_list.append(res_num)
+            energy_list.append(score)
+            SD_list.append(0)
+            #abacus_score_dict[key] = score
             #print(key, score)
         abacus_file.close()
-    return abacus_score_dict
+    return {'mutation':mutation_list,'energy':energy_list,'SD':SD_list,'position':position_list,}
 
-def dump_tabfile(abacus_score_dict,cutoff):
-    for key in abacus_score_dict:
-        if abacus_score_dict[key] < cutoff:
-            
+odict = read_abacus_file(abacus_file)
+CompleteList_df = pd.DataFrame(odict)
 
-read_abacus_file("6JTT.pdb1.abacus2.out")
+CompleteList_SortedByEnergy_df = CompleteList_df.sort_values('energy').reset_index(drop=True)
+
+def BetsPerPosition(df):
+    position_list = []
+    length = df.shape[0]
+    for i in range(length):
+        if df['position'][i] in position_list:
+            df = df.drop(index=i)
+        else:
+            position_list.append(df['position'][i])
+    return df.reset_index(drop=True)
+
+def BelowCutOff(df,cutoff):
+    #position_list = []
+    length = df.shape[0]
+    for i in range(length):
+        if float(df['energy'][i]) > float(cutoff):
+            df = df.drop(index=i)
+        else:
+            continue
+    return df.reset_index(drop=True)
+
+BestPerPosition_SortedByEnergy_df = BetsPerPosition(CompleteList_SortedByEnergy_df)
+
+BestPerPosition_df = BetsPerPosition(CompleteList_SortedByEnergy_df)
+
+BelowCutOff_df = BelowCutOff(CompleteList_df,-1)
+
+BelowCutOff_SortedByEnergy_df = BelowCutOff(CompleteList_SortedByEnergy_df,-1)
+
+BestPerPositionBelowCutOff_SortedByEnergy_df = BelowCutOff(BestPerPosition_SortedByEnergy_df,-1)
+
+BestPerPositionBelowCutOff_df = BelowCutOff(BestPerPosition_df,-1)
+
+def variablename(var):
+    import itertools
+    return [tpl[0] for tpl in filter(lambda x: var is x[1], globals().items())]
+
+
+def out_tab_file(df):
+    df_name = variablename(df)[0]
+    filename = "MutationsEnergies_"+df_name[:-3]+".tab"
+    with open(filename,"w+") as of:
+        of.write(BestPerPositionBelowCutOff_df.to_csv(columns=['mutation', 'energy', 'SD'], sep='\t', index=False))
+        of.close()
+
+out_tab_file(CompleteList_df)
+out_tab_file(CompleteList_SortedByEnergy_df)
+out_tab_file(BestPerPosition_SortedByEnergy_df)
+out_tab_file(BestPerPosition_df)
+out_tab_file(BelowCutOff_df)
+out_tab_file(BelowCutOff_SortedByEnergy_df)
+out_tab_file(BestPerPositionBelowCutOff_SortedByEnergy_df)
+out_tab_file(BestPerPositionBelowCutOff_df)
+
+
+
