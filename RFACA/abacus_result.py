@@ -70,13 +70,13 @@ BestPerPosition_SortedByEnergy_df = BetsPerPosition(CompleteList_SortedByEnergy_
 
 BestPerPosition_df = BetsPerPosition(CompleteList_SortedByEnergy_df)
 
-BelowCutOff_df = BelowCutOff(CompleteList_df,-1)
+BelowCutOff_df = BelowCutOff(CompleteList_df,-CUTOFF)
 
-BelowCutOff_SortedByEnergy_df = BelowCutOff(CompleteList_SortedByEnergy_df,-1)
+BelowCutOff_SortedByEnergy_df = BelowCutOff(CompleteList_SortedByEnergy_df,-CUTOFF)
 
-BestPerPositionBelowCutOff_SortedByEnergy_df = BelowCutOff(BestPerPosition_SortedByEnergy_df,-1)
+BestPerPositionBelowCutOff_SortedByEnergy_df = BelowCutOff(BestPerPosition_SortedByEnergy_df,-CUTOFF)
 
-BestPerPositionBelowCutOff_df = BelowCutOff(BestPerPosition_df,-1)
+BestPerPositionBelowCutOff_df = BelowCutOff(BestPerPosition_df,-CUTOFF)
 
 def variablename(var):
     import itertools
