@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ab4ee515-5afa-4d6d-bae0-51c226c6083e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/RFACA/abacus_result.py" beforeDir="false" afterPath="$PROJECT_DIR$/RFACA/abacus_result.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/basic/fasta.py" beforeDir="false" afterPath="$PROJECT_DIR$/basic/fasta.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
